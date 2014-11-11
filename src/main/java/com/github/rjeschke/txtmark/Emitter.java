@@ -128,6 +128,8 @@ class Emitter
             }
             out.append('>');
             break;
+        default:
+        	break;
         }
 
         if(root.hasLines())
@@ -173,6 +175,8 @@ class Emitter
         case LIST_ITEM:
             this.config.decorator.closeListItem(out);
             break;
+        default:
+        	break;
         }
     }
 
@@ -749,6 +753,7 @@ class Emitter
      *            Character to check
      * @return 32 is c was a whitespace, c otherwise
      */
+    @SuppressWarnings("deprecation")
     private static char whitespaceToSpace(char c)
     {
         return Character.isSpace(c) ? ' ' : c;

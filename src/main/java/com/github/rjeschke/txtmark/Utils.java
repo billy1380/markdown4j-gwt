@@ -649,6 +649,7 @@ class Utils
      * @return Rest of the line after trimming and backtick removal
      * @since 0.7
      */
+    @SuppressWarnings("deprecation")
     public final static String getMetaFromFence(String fenceLine)
     {
         for(int i = 0; i < fenceLine.length(); i++)
