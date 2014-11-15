@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2011 bedatadriven
+  ~ Copyright (C) 2014 reflection.io
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -30,8 +30,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
+            <version>2.6.0</version>
         </dependency>
     </dependencies>
 
@@ -132,6 +131,10 @@
 		      <include>com/google/gwt/emul/**/*.java</include>
 		    </includes>
 		  </resource>
+		  <resource>
+            <filtering>false</filtering>
+            <directory>src/main/resources</directory>
+          </resource>
 </resources>
     </build>
 </project>
