@@ -15,7 +15,8 @@
  */
 package com.github.rjeschke.txtmark;
 
-import com.google.gwt.core.client.Duration;
+import java.util.Date;
+
 
 /**
  * Utilities.
@@ -26,7 +27,7 @@ class Utils
 {
     /** Random number generator value. */
 //    private static int RND = (int)System.nanoTime();
-	private static int RND = (int)Duration.currentTimeMillis();
+	private static int RND = (int)(new Date()).getTime();
 
     /**
      * LCG random number generator.
