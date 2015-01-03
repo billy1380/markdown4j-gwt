@@ -13,7 +13,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public interface PluginContentReadyEventHandler extends EventHandler {
 	public static final GwtEvent.Type<PluginContentReadyEventHandler> TYPE = new GwtEvent.Type<PluginContentReadyEventHandler>();
 
-	public void ready(String id, String content);
+	public void ready(PluginContentReadyEvent event, String id, String content);
 
 	public class PluginContentReadyEvent extends GwtEvent<PluginContentReadyEventHandler> {
 		private String id;
@@ -31,7 +31,7 @@ public interface PluginContentReadyEventHandler extends EventHandler {
 
 		@Override
 		protected void dispatch(PluginContentReadyEventHandler handler) {
-			handler.ready(id, content);
+			handler.ready(this, id, content);
 		}
 	}
 

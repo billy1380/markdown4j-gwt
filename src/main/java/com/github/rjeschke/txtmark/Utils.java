@@ -91,6 +91,7 @@ class Utils
         case '!':
         case '`':
         case '^':
+        case ':':
             out.append(ch);
             return pos + 1;
         default:
@@ -663,4 +664,15 @@ class Utils
         }
         return "";
     }
+
+	/**
+	 * Removes leading and trailing character
+	 * @param value
+	 * @param character
+	 * @return
+	 */
+	public static String trimLeadingAndTrailing(String value, char character) {
+		// TODO trim with loops :(
+		return value;
+	}
 }

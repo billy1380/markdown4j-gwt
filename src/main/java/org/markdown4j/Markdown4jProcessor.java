@@ -9,6 +9,7 @@ import com.github.rjeschke.txtmark.Configuration;
 import com.github.rjeschke.txtmark.Configuration.Builder;
 import com.github.rjeschke.txtmark.Processor;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public class Markdown4jProcessor {
 
@@ -23,8 +24,8 @@ public class Markdown4jProcessor {
 	private Builder builder() {
 		decorator = new ExtDecorator();
 
-		return Configuration.builder().forceExtentedProfile().registerPlugins(new YumlPlugin(), new WebSequencePlugin(manager)/* , new IncludePlugin(manager) */)
-				.convertNewline2Br().setDecorator(decorator).setCodeBlockEmitter(new CodeBlockEmitter());
+		return Configuration.builder().forceExtentedProfile().convertNewline2Br().registerPlugins(new YumlPlugin()).setDecorator(decorator)
+				.setCodeBlockEmitter(new CodeBlockEmitter());
 	}
 
 	public Markdown4jProcessor registerPlugins(Plugin... plugins) {
@@ -56,7 +57,12 @@ public class Markdown4jProcessor {
 		return Processor.process(input, builder.build());
 	}
 
-	public void addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
-		manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
+	public Markdown4jProcessor registerAsyncPlugins() {
+		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
+		return this;
+	}
+	
+	public HandlerRegistration addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
+		return manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
 	}
 }

@@ -74,4 +74,7 @@ enum MarkToken
     X_LINK_OPEN,        // [[
     /** ]] */
     X_LINK_CLOSE,       // ]]
+    /** : */
+    EMOJI,       // :
+    
 }

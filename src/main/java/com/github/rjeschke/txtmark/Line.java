@@ -138,6 +138,7 @@ class Line
                 case '_':
                 case '!':
                 case '`':
+                case ':':
                     sb.append(c);
                     pos++;
                     break;

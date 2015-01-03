@@ -13,6 +13,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
  * Warning: This is not a good candidate for live updating
@@ -42,16 +43,12 @@ public class WebSequencePlugin extends AbstractAsyncPlugin {
 		content = content + "\n";
 
 		try {
-			String id = params.get("id");
-			if (id != null) {
-				out.append("<div id=\"");
-				out.append(id);
-				out.append("\">Loading...</div>");
+			String id = null;
+			out.append("<div id=\"");
+			out.append(id = HTMLPanel.createUniqueId());
+			out.append("\">Loading...</div>");
 
-				getSequenceDiagram(content, style, id);
-			} else {
-				// Do nothing
-			}
+			getSequenceDiagram(content, style, id);
 		} catch (IOException e) {
 			throw new RuntimeException("Error while rendering websequenceplugin", e);
 		}
