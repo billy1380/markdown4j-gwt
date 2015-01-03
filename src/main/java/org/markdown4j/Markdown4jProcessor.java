@@ -1,6 +1,7 @@
 package org.markdown4j;
 
 import java.io.IOException;
+import java.io.Reader;
 
 import com.github.rjeschke.txtmark.Configuration;
 import com.github.rjeschke.txtmark.Configuration.Builder;
@@ -18,7 +19,7 @@ public class Markdown4jProcessor {
 	
 	private Builder builder() {
 		decorator = new ExtDecorator();
-//		return Configuration.builder().forceExtentedProfile().registerPlugins(new YumlPlugin(), new WebSequencePlugin(), new IncludePlugin()).convertNewline2Br().setDecorator(decorator).setCodeBlockEmitter(new CodeBlockEmitter());
+		//return Configuration.builder().forceExtentedProfile().registerPlugins(new YumlPlugin(), new WebSequencePlugin(), new IncludePlugin()).convertNewline2Br().setDecorator(decorator).setCodeBlockEmitter(new CodeBlockEmitter());
 		return Configuration.builder().forceExtentedProfile().registerPlugins(new YumlPlugin()).convertNewline2Br().setDecorator(decorator).setCodeBlockEmitter(new CodeBlockEmitter());
 	}
 	public Markdown4jProcessor registerPlugins(Plugin ... plugins) {
@@ -38,15 +39,9 @@ public class Markdown4jProcessor {
 		decorator.addStyleClass(styleClass, tags);
 		return this;
 	}
-//	public String process(File file) throws IOException {
-//		return Processor.process(file, builder.build());
-//	}
-//	public String process(InputStream input) throws IOException {
-//		return Processor.process(input);
-//	}
-//	public String process(Reader reader) throws IOException {
-//		return Processor.process(reader, builder.build());
-//	}
+	public String process(Reader reader) throws IOException {
+		return Processor.process(reader, builder.build());
+	}
 	public String process(String input) throws IOException {
 		return Processor.process(input, builder.build());
 	}

@@ -32,11 +32,11 @@ public class YumlPlugin extends Plugin {
 		}
 		String dir = params.get("dir");
 		if(dir != null) {
-			style = style+";dir:"+dir+";";			
+			style = style+";dir:"+dir;			
 		}
 		String scale = params.get("scale");
 		if(scale != null) {
-			style = style+";scale:"+scale+";";			
+			style = style+";scale:"+scale;			
 		}
 		String format = params.get("format");
 				

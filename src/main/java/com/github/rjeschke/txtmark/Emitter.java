@@ -1082,7 +1082,7 @@ class Emitter
     
 	protected Map<String, String> parsePluginParams(String s) {
 		Map<String, String> params = new HashMap<String, String>();
-		RegExp regExp = RegExp.compile("(\\w+)=\"*((?<=\")[^\"]+(?=\")|([^\\s]+))\"*");
+		RegExp regExp = RegExp.compile("(\\w+)=\"*((?=\")[^\"]+(?=\")|([^\\s]+))\"*", "g");
 	     
 
 	     MatchResult m;
