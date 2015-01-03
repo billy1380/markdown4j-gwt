@@ -1,6 +1,6 @@
 //  
 //  PluginContentReadyEvent.java
-//  reflection.io
+//  markdown4j-gwt
 //
 //  Created by William Shakour on December 31, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
