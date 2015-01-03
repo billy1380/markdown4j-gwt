@@ -1,84 +1,94 @@
 package org.markdown4j;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-public class WebSequencePlugin extends Plugin {
+import org.markdown4j.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
-	public WebSequencePlugin() {
-		super("sequence");
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+
+/**
+ * Warning: This is not a good candidate for live updating
+ *
+ */
+public class WebSequencePlugin extends AbstractAsyncPlugin {
+
+	public WebSequencePlugin(HandlerManager manager) {
+		super("sequence", manager);
 	}
+
 	@Override
 	public void emit(final StringBuilder out, final List<String> lines, final Map<String, String> params) {
 		String style = params.get("style");
-		if(style == null) {
-			style = "default";			
+		if (style == null) {
+			style = "default";
 		}
 		String content = null;
-		for(String line : lines) {
-			if(content == null) {
+		for (String line : lines) {
+			if (content == null) {
 				content = line;
-			}
-			else {
-				content = content + "\n" + line;				
+			} else {
+				content = content + "\n" + line;
 			}
 		}
-		
+
 		content = content + "\n";
-		
+
 		try {
-			String link = getSequenceDiagram(content, style);
-			
-			if(link != null) {
-				out.append("<img src=\"");
-				out.append(link);
-				out.append("\"/>");			
+			String id = params.get("id");
+			if (id != null) {
+				out.append("<div id=\"");
+				out.append(id);
+				out.append("\">Loading...</div>");
+
+				getSequenceDiagram(content, style, id);
+			} else {
+				// Do nothing
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Error while rendering websequenceplugin", e);
 		}
 	}
-	private String getSequenceDiagram(String text, String style) throws IOException {
-            //Build parameter string
-            String data = "style=" + style + "&message=" +  URLEncoder.encode( text, "UTF-8" ) + "&apiVersion=1";
-            
-            // Send the request
-            URL url = new URL("http://www.websequencediagrams.com");
-            URLConnection conn = url.openConnection();
-            conn.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            
-            //write parameters
-            writer.write(data);
-            writer.flush();
-            
-            // Get the response
-            StringBuffer answer = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                answer.append(line);
-            }
-            writer.close();
-            reader.close();
 
-            String json = answer.toString();
-            
-            int start = json.indexOf( "?png=" );
-            int end = json.indexOf( "\"", start );
-            
-            if(start != -1 && end != -1) {
-                String surl =  "http://www.websequencediagrams.com/" + json.substring(start, end) ;	            	            
-                return surl;            	
-            }
-            return null;
-            	            
-   }
+	private void getSequenceDiagram(String text, String style, final String id) throws IOException {
+		// Build parameter string
+		String data = "style=" + style + "&message=" + URL.encode(text) + "&apiVersion=1";
+
+		// Send the request
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode("http://spchoprcors.appspot.com/www.websequencediagrams.com"));
+		try {
+			builder.sendRequest(data, new RequestCallback() {
+
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+						String json = response.getText();
+
+						int start = json.indexOf("?png=");
+						int end = json.indexOf("\"", start);
+
+						if (start != -1 && end != -1) {
+							String content = "<img src=\"http://www.websequencediagrams.com/" + json.substring(start, end) + "\">";
+
+							if (manager != null) {
+								manager.fireEvent(new PluginContentReadyEvent(id, content));
+							}
+						}
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {}
+			});
+		} catch (RequestException rex) {
+			throw new IOException(rex);
+		}
+	}
 }
