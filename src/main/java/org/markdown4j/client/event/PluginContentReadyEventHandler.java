@@ -5,7 +5,7 @@
 //  Created by William Shakour on December 31, 2014.
 //  Copyrights © 2014 SPACEHOPPER STUDIOS LTD. All rights reserved.
 //
-package org.markdown4j.event;
+package org.markdown4j.client.event;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;

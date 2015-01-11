@@ -1,10 +1,10 @@
-package org.markdown4j;
+package org.markdown4j.client;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.markdown4j.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
+import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Request;

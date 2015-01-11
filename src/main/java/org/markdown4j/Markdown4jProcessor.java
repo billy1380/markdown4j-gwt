@@ -3,17 +3,12 @@ package org.markdown4j;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.markdown4j.event.PluginContentReadyEventHandler;
-
 import com.github.rjeschke.txtmark.Configuration;
 import com.github.rjeschke.txtmark.Configuration.Builder;
 import com.github.rjeschke.txtmark.Processor;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 
-public class Markdown4jProcessor {
-
-	private HandlerManager manager = new HandlerManager(this);
+public abstract class Markdown4jProcessor {
+	
 	private Builder builder;
 	private ExtDecorator decorator;
 
@@ -49,20 +44,12 @@ public class Markdown4jProcessor {
 		return this;
 	}
 
-	public String process(Reader reader) throws IOException {
+	protected String process(Reader reader) throws IOException {
 		return Processor.process(reader, builder.build());
 	}
 
-	public String process(String input) throws IOException {
+	protected String process(String input) throws IOException {
 		return Processor.process(input, builder.build());
 	}
-
-	public Markdown4jProcessor registerAsyncPlugins() {
-		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
-		return this;
-	}
 	
-	public HandlerRegistration addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
-		return manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
-	}
 }

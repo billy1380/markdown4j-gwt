@@ -1,10 +1,10 @@
-package org.markdown4j;
+package org.markdown4j.client;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.markdown4j.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
+import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Request;
@@ -52,9 +52,11 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 				public void onResponseReceived(Request request, Response response) {
 					if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
 						String content = response.getText();
+						String markdownContent = null;
 
 						if (manager != null) {
-							manager.fireEvent(new PluginContentReadyEvent(id, content));
+							markdownContent = (new GwtMarkdownProcessor()).process(content);
+							manager.fireEvent(new PluginContentReadyEvent(id, markdownContent == null ? content : markdownContent));
 						}
 					}
 				}
