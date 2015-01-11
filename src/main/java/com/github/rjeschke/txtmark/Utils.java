@@ -581,7 +581,7 @@ class Utils {
 	 */
 	public static Map<String, String> parseParams(String s) {
 		Map<String, String> params = new HashMap<String, String>();
-		RegExp regExp = RegExp.compile("(\\w+)=((?<=\")[^\"]+(?=\")|([^\\s]+))", "g");
+		RegExp regExp = RegExp.compile("(\\w+)=((?=\")[^\"]+(?=\")|([^\\s]+))", "g");
 
 		MatchResult m;
 		while ((m = regExp.exec(s)) != null) {
