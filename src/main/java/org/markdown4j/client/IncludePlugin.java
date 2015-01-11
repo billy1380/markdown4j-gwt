@@ -55,7 +55,18 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 						String markdownContent = null;
 
 						if (manager != null) {
-							markdownContent = (new GwtMarkdownProcessor()).process(content);
+							markdownContent = (new MarkdownProcessor() {
+
+								/*
+								 * (non-Javadoc)
+								 * 
+								 * @see org.markdown4j.client.MarkdownProcessor#registerPlugins()
+								 */
+								protected void registerPlugins() {
+									// don't register any especially not the include plugin to avoid recursive content and also because there are no listeners
+								};
+
+							}).process(content);
 							manager.fireEvent(new PluginContentReadyEvent(id, markdownContent == null ? content : markdownContent));
 						}
 					}

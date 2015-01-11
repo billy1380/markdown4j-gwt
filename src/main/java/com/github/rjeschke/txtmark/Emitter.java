@@ -21,8 +21,6 @@ import java.util.Map;
 
 import org.markdown4j.Plugin;
 
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.shared.SafeUri;
 
 import emoji.gwt.emoji.Emoji;
@@ -924,7 +922,7 @@ class Emitter {
 			idPlugin = meta.substring(0, iow);
 			sparams = meta.substring(iow + 1);
 			if (sparams != null) {
-				params = parsePluginParams(sparams);
+				params = Utils.parseParams(sparams);
 			}
 		}
 
@@ -942,18 +940,6 @@ class Emitter {
 		if (plugin != null) {
 			plugin.emit(out, list, params);
 		}
-	}
-
-	protected Map<String, String> parsePluginParams(String s) {
-		Map<String, String> params = new HashMap<String, String>();
-		RegExp regExp = RegExp.compile("(\\w+)=((?=\")[^\"]+(?=\")|([^\\s]+))", "g");
-
-		MatchResult m;
-		while ((m = regExp.exec(s)) != null) {
-			params.put(m.getGroup(1), Utils.trimLeadingAndTrailing(m.getGroup(2), '"'));
-		}
-
-		return params;
 	}
 
 }

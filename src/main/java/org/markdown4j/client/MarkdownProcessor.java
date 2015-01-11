@@ -8,8 +8,9 @@
 package org.markdown4j.client;
 
 import java.io.IOException;
+import java.io.Reader;
 
-import org.markdown4j.Markdown4jProcessor;
+import org.markdown4j.AbstractMarkdownProcessor;
 import org.markdown4j.client.event.PluginContentReadyEventHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -19,7 +20,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author William Shakour (billy1380)
  *
  */
-public class GwtMarkdownProcessor extends Markdown4jProcessor {
+public class MarkdownProcessor extends AbstractMarkdownProcessor {
 	private HandlerManager manager = new HandlerManager(this);
 
 	public String process(String markdown) {
@@ -33,13 +34,28 @@ public class GwtMarkdownProcessor extends Markdown4jProcessor {
 
 		return processed;
 	}
+	
+	public String process(Reader reader) {
+		String processed = null;
+		try {
+			processed = super.process(reader);
+		} catch (IOException ioe) {
+			// this is very unlikely - but better to throw as runtime exception than getting lost
+			throw new RuntimeException(ioe);
+		}
 
-	public GwtMarkdownProcessor registerAsyncPlugins() {
-		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
-		return this;
+		return processed;
 	}
 
 	public HandlerRegistration addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
 		return manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.markdown4j.AbstractMarkdownProcessor#registerPlugins()
+	 */
+	@Override
+	protected void registerPlugins() {
+		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
 	}
 }
