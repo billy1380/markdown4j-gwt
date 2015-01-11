@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  *
  */
 public class MarkdownProcessor extends AbstractMarkdownProcessor {
-	private HandlerManager manager = new HandlerManager(this);
+	private HandlerManager manager;
 
 	public String process(String markdown) {
 		String processed = null;
@@ -34,7 +34,7 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 
 		return processed;
 	}
-	
+
 	public String process(Reader reader) {
 		String processed = null;
 		try {
@@ -51,11 +51,17 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 		return manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.markdown4j.AbstractMarkdownProcessor#registerPlugins()
 	 */
 	@Override
 	protected void registerPlugins() {
+		if (manager == null) {
+			manager = new HandlerManager(this);
+		}
+
 		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
 	}
 }
