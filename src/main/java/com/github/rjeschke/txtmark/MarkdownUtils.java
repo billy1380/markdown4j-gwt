@@ -27,7 +27,7 @@ import com.google.gwt.regexp.shared.RegExp;
  * 
  * @author René Jeschke <rene_jeschke@yahoo.de>
  */
-class Utils {
+public class MarkdownUtils {
 	/** Random number generator value. */
 	// private static int RND = (int)System.nanoTime();
 	private static int RND = (int) (new Date()).getTime();

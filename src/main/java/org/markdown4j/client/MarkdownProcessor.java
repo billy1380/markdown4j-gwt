@@ -13,6 +13,7 @@ import java.io.Reader;
 import org.markdown4j.AbstractMarkdownProcessor;
 import org.markdown4j.client.event.PluginContentReadyEventHandler;
 
+import com.github.rjeschke.txtmark.EmojiEmitter;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -63,5 +64,15 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 		}
 
 		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.markdown4j.AbstractMarkdownProcessor#emojiEmitter()
+	 */
+	@Override
+	protected EmojiEmitter emojiEmitter() {
+		return new GwtEmojiEmitter();
 	}
 }

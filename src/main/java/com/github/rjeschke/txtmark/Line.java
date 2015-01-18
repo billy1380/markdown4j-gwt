@@ -472,13 +472,13 @@ class Line
             if(this.readXMLComment(this, this.leading) > 0)
                 return true;
         }
-        pos = Utils.readXML(temp, this.value, this.leading, false);
+        pos = MarkdownUtils.readXML(temp, this.value, this.leading, false);
         String element, tag;
         if(pos > -1)
         {
             element = temp.toString();
             temp.setLength(0);
-            Utils.getXMLTag(temp, element);
+            MarkdownUtils.getXMLTag(temp, element);
             tag = temp.toString().toLowerCase();
             if(!HTML.isHtmlBlockElement(tag))
                 return false;
@@ -504,12 +504,12 @@ class Line
                 else
                 {
                     temp.setLength(0);
-                    final int newPos = Utils.readXML(temp, line.value, pos, false);
+                    final int newPos = MarkdownUtils.readXML(temp, line.value, pos, false);
                     if(newPos > 0)
                     {
                         element = temp.toString();
                         temp.setLength(0);
-                        Utils.getXMLTag(temp, element);
+                        MarkdownUtils.getXMLTag(temp, element);
                         tag = temp.toString().toLowerCase();
                         if(HTML.isHtmlBlockElement(tag) && !tag.equals("hr"))
                         {

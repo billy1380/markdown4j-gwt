@@ -21,10 +21,6 @@ import java.util.Map;
 
 import org.markdown4j.Plugin;
 
-import com.google.gwt.safehtml.shared.SafeUri;
-
-import emoji.gwt.emoji.Emoji;
-
 /**
  * Emitter class responsible for generating HTML output.
  * 
@@ -90,7 +86,7 @@ class Emitter {
 			this.config.decorator.openHeadline(out, root.hlDepth);
 			if (this.useExtensions && root.id != null) {
 				out.append(" id=\"");
-				Utils.appendCode(out, root.id, 0, root.id.length());
+				MarkdownUtils.appendCode(out, root.id, 0, root.id.length());
 				out.append('"');
 			}
 			out.append('>');
@@ -115,7 +111,7 @@ class Emitter {
 			this.config.decorator.openListItem(out);
 			if (this.useExtensions && root.id != null) {
 				out.append(" id=\"");
-				Utils.appendCode(out, root.id, 0, root.id.length());
+				MarkdownUtils.appendCode(out, root.id, 0, root.id.length());
 				out.append('"');
 			}
 			out.append('>');
@@ -236,12 +232,12 @@ class Emitter {
 		final StringBuilder temp = new StringBuilder();
 
 		temp.setLength(0);
-		pos = Utils.readMdLinkId(temp, in, pos);
+		pos = MarkdownUtils.readMdLinkId(temp, in, pos);
 		if (pos < start) return -1;
 
 		String name = temp.toString(), link = null, comment = null;
 		final int oldPos = pos++;
-		pos = Utils.skipSpaces(in, pos);
+		pos = MarkdownUtils.skipSpaces(in, pos);
 		if (pos < start) {
 			final LinkRef lr = this.linkRefs.get(name.toLowerCase());
 			if (lr != null) {
@@ -254,25 +250,25 @@ class Emitter {
 			}
 		} else if (in.charAt(pos) == '(') {
 			pos++;
-			pos = Utils.skipSpaces(in, pos);
+			pos = MarkdownUtils.skipSpaces(in, pos);
 			if (pos < start) return -1;
 			temp.setLength(0);
 			boolean useLt = in.charAt(pos) == '<';
-			pos = useLt ? Utils.readUntil(temp, in, pos + 1, '>') : Utils.readMdLink(temp, in, pos);
+			pos = useLt ? MarkdownUtils.readUntil(temp, in, pos + 1, '>') : MarkdownUtils.readMdLink(temp, in, pos);
 			if (pos < start) return -1;
 			if (useLt) pos++;
 			link = temp.toString();
 
 			if (in.charAt(pos) == ' ') {
-				pos = Utils.skipSpaces(in, pos);
+				pos = MarkdownUtils.skipSpaces(in, pos);
 				if (pos > start && in.charAt(pos) == '"') {
 					pos++;
 					temp.setLength(0);
-					pos = Utils.readUntil(temp, in, pos, '"');
+					pos = MarkdownUtils.readUntil(temp, in, pos, '"');
 					if (pos < start) return -1;
 					comment = temp.toString();
 					pos++;
-					pos = Utils.skipSpaces(in, pos);
+					pos = MarkdownUtils.skipSpaces(in, pos);
 					if (pos == -1) return -1;
 				}
 			}
@@ -280,7 +276,7 @@ class Emitter {
 		} else if (in.charAt(pos) == '[') {
 			pos++;
 			temp.setLength(0);
-			pos = Utils.readRawUntil(temp, in, pos, ']');
+			pos = MarkdownUtils.readRawUntil(temp, in, pos, ']');
 			if (pos < start) return -1;
 			final String id = temp.length() > 0 ? temp.toString() : name;
 			final LinkRef lr = this.linkRefs.get(id.toLowerCase());
@@ -306,18 +302,18 @@ class Emitter {
 			if (isAbbrev && comment != null) {
 				if (!this.useExtensions) return -1;
 				out.append("<abbr title=\"");
-				Utils.appendValue(out, comment, 0, comment.length());
+				MarkdownUtils.appendValue(out, comment, 0, comment.length());
 				out.append("\">");
 				this.recursiveEmitLine(out, name, 0, MarkToken.NONE);
 				out.append("</abbr>");
 			} else {
 				this.config.decorator.openLink(out);
 				out.append(" href=\"");
-				Utils.appendValue(out, link, 0, link.length());
+				MarkdownUtils.appendValue(out, link, 0, link.length());
 				out.append('"');
 				if (comment != null) {
 					out.append(" title=\"");
-					Utils.appendValue(out, comment, 0, comment.length());
+					MarkdownUtils.appendValue(out, comment, 0, comment.length());
 					out.append('"');
 				}
 				out.append('>');
@@ -327,13 +323,13 @@ class Emitter {
 		} else {
 			this.config.decorator.openImage(out);
 			out.append(" src=\"");
-			Utils.appendValue(out, link, 0, link.length());
+			MarkdownUtils.appendValue(out, link, 0, link.length());
 			out.append("\" alt=\"");
-			Utils.appendValue(out, name, 0, name.length());
+			MarkdownUtils.appendValue(out, name, 0, name.length());
 			out.append('"');
 			if (comment != null) {
 				out.append(" title=\"");
-				Utils.appendValue(out, comment, 0, comment.length());
+				MarkdownUtils.appendValue(out, comment, 0, comment.length());
 				out.append('"');
 			}
 			out.append(" />");
@@ -359,16 +355,16 @@ class Emitter {
 
 		// Check for auto links
 		temp.setLength(0);
-		pos = Utils.readUntil(temp, in, start + 1, ':', ' ', '>', '\n');
+		pos = MarkdownUtils.readUntil(temp, in, start + 1, ':', ' ', '>', '\n');
 		if (pos != -1 && in.charAt(pos) == ':' && HTML.isLinkPrefix(temp.toString())) {
-			pos = Utils.readUntil(temp, in, pos, '>');
+			pos = MarkdownUtils.readUntil(temp, in, pos, '>');
 			if (pos != -1) {
 				final String link = temp.toString();
 				this.config.decorator.openLink(out);
 				out.append(" href=\"");
-				Utils.appendValue(out, link, 0, link.length());
+				MarkdownUtils.appendValue(out, link, 0, link.length());
 				out.append("\">");
-				Utils.appendValue(out, link, 0, link.length());
+				MarkdownUtils.appendValue(out, link, 0, link.length());
 				out.append("</a>");
 				return pos;
 			}
@@ -376,9 +372,9 @@ class Emitter {
 
 		// Check for mailto or adress auto link
 		temp.setLength(0);
-		pos = Utils.readUntil(temp, in, start + 1, '@', ' ', '>', '\n');
+		pos = MarkdownUtils.readUntil(temp, in, start + 1, '@', ' ', '>', '\n');
 		if (pos != -1 && in.charAt(pos) == '@') {
-			pos = Utils.readUntil(temp, in, pos, '>');
+			pos = MarkdownUtils.readUntil(temp, in, pos, '>');
 			if (pos != -1) {
 				final String link = temp.toString();
 				this.config.decorator.openLink(out);
@@ -394,10 +390,10 @@ class Emitter {
 				}
 				// mailto auto links
 				else {
-					Utils.appendMailto(out, "mailto:", 0, 7);
-					Utils.appendMailto(out, link, 0, link.length());
+					MarkdownUtils.appendMailto(out, "mailto:", 0, 7);
+					MarkdownUtils.appendMailto(out, link, 0, link.length());
 					out.append("\">");
-					Utils.appendMailto(out, link, 0, link.length());
+					MarkdownUtils.appendMailto(out, link, 0, link.length());
 				}
 				out.append("</a>");
 				return pos;
@@ -407,7 +403,7 @@ class Emitter {
 		// Check for inline html
 		if (start + 2 < in.length()) {
 			temp.setLength(0);
-			return Utils.readXML(out, in, start, this.config.safeMode);
+			return MarkdownUtils.readXML(out, in, start, this.config.safeMode);
 		}
 
 		return -1;
@@ -425,7 +421,7 @@ class Emitter {
 	 * @return The new position or -1 if this entity in invalid.
 	 */
 	private static int checkEntity(final StringBuilder out, final String in, int start) {
-		int pos = Utils.readUntil(out, in, start, ';');
+		int pos = MarkdownUtils.readUntil(out, in, start, ';');
 		if (pos < 0 || out.length() < 3) return -1;
 		if (out.charAt(1) == '#') {
 			if (out.charAt(2) == 'x' || out.charAt(2) == 'X') {
@@ -542,24 +538,8 @@ class Emitter {
 				b = this.recursiveEmitLine(temp, in, pos + 1, mt);
 				if (b > 0) {
 					String name = ":" + temp.toString() + ":";
-					SafeUri safeLink = Emoji.get().safeUri(name);
-					String link;
-					String comment;
-					if (safeLink != null && (link = safeLink.asString()).length() != 0) {
-						comment = name + " Emoji";
-
-						this.config.decorator.openImage(out);
-						out.append(" class=\"emoji\" src=\"");
-						Utils.appendValue(out, link, 0, link.length());
-						out.append("\" alt=\"");
-						Utils.appendValue(out, name, 0, name.length());
-						out.append('"');
-						if (comment != null) {
-							out.append(" title=\"");
-							Utils.appendValue(out, comment, 0, comment.length());
-							out.append('"');
-						}
-						out.append(" />");
+					if (this.config.emojiEmitter != null) {
+						this.config.emojiEmitter.emitEmoji(out, name, this.config.decorator);
 					} else {
 						out.append(name);
 					}
@@ -580,7 +560,7 @@ class Emitter {
 						while (in.charAt(b - 1) == ' ')
 							b--;
 						this.config.decorator.openCodeSpan(out);
-						Utils.appendCode(out, in, a, b);
+						MarkdownUtils.appendCode(out, in, a, b);
 						this.config.decorator.closeCodeSpan(out);
 					}
 				} else {
@@ -832,7 +812,7 @@ class Emitter {
 			for (int pos = 0; pos < in.length(); pos++) {
 				if (in.charAt(pos) == '<') {
 					temp.setLength(0);
-					final int t = Utils.readXML(temp, in, pos, this.config.safeMode);
+					final int t = MarkdownUtils.readXML(temp, in, pos, this.config.safeMode);
 					if (t != -1) {
 						out.append(temp);
 						pos = t;
@@ -922,7 +902,7 @@ class Emitter {
 			idPlugin = meta.substring(0, iow);
 			sparams = meta.substring(iow + 1);
 			if (sparams != null) {
-				params = Utils.parseParams(sparams);
+				params = MarkdownUtils.parseParams(sparams);
 			}
 		}
 

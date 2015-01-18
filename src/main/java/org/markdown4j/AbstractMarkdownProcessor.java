@@ -5,12 +5,28 @@ import java.io.Reader;
 
 import com.github.rjeschke.txtmark.Configuration;
 import com.github.rjeschke.txtmark.Configuration.Builder;
+import com.github.rjeschke.txtmark.EmojiEmitter;
 import com.github.rjeschke.txtmark.Processor;
+import com.github.rjeschke.txtmark.SpanEmitter;
 
 public abstract class AbstractMarkdownProcessor {
 
 	private Builder builder;
 	private ExtDecorator decorator;
+
+	protected abstract void registerPlugins();
+
+	protected EmojiEmitter emojiEmitter() {
+		return null;
+	}
+
+	protected SpanEmitter spanEmitter() {
+		return null;
+	}
+
+	protected CodeBlockEmitter codeBlockEmitter() {
+		return new CodeBlockEmitter();
+	}
 
 	public AbstractMarkdownProcessor() {
 		this.builder = builder();
@@ -21,10 +37,8 @@ public abstract class AbstractMarkdownProcessor {
 		decorator = new ExtDecorator();
 
 		return Configuration.builder().forceExtentedProfile().convertNewline2Br().registerPlugins(new YumlPlugin()).setDecorator(decorator)
-				.setCodeBlockEmitter(new CodeBlockEmitter());
+				.setCodeBlockEmitter(codeBlockEmitter()).setSpecialLinkEmitter(spanEmitter()).setEmojiEmitter(emojiEmitter());
 	}
-
-	protected abstract void registerPlugins();
 
 	public AbstractMarkdownProcessor registerPlugins(Plugin... plugins) {
 		builder.registerPlugins(plugins);

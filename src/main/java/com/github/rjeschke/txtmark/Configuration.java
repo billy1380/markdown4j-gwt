@@ -32,6 +32,7 @@ public class Configuration
     final String encoding;
     final Decorator decorator;
     final BlockEmitter codeBlockEmitter;
+    final EmojiEmitter emojiEmitter;
     final boolean forceExtendedProfile;
     final boolean convertNewline2Br;
     final SpanEmitter specialLinkEmitter;
@@ -48,6 +49,7 @@ public class Configuration
      * <li><code>encoding = UTF-8</code></li>
      * <li><code>decorator = DefaultDecorator</code></li>
      * <li><code>codeBlockEmitter = null</code></li>
+     * <li><code>emojiEmitter = null</code></li>
      * </ul>
      */
     public final static Configuration DEFAULT = Configuration.builder().build();
@@ -72,9 +74,15 @@ public class Configuration
      * @param safeMode
      * @param encoding
      * @param decorator
+     * @param codeBlockEmitter
+     * @param forceExtendedProfile
+     * @param convertNewline2Br
+     * @param specialLinkEmitter
+     * @param emojiEmitter
+     * @param plugins
      */
     Configuration(boolean safeMode, String encoding, Decorator decorator, BlockEmitter codeBlockEmitter,
-            boolean forceExtendedProfile, boolean convertNewline2Br, SpanEmitter specialLinkEmitter, List<Plugin> plugins)
+            boolean forceExtendedProfile, boolean convertNewline2Br, SpanEmitter specialLinkEmitter, EmojiEmitter emojiEmitter, List<Plugin> plugins)
     {
         this.safeMode = safeMode;
         this.encoding = encoding;
@@ -83,6 +91,7 @@ public class Configuration
         this.convertNewline2Br = convertNewline2Br;
         this.forceExtendedProfile = forceExtendedProfile;
         this.specialLinkEmitter = specialLinkEmitter;
+        this.emojiEmitter = emojiEmitter;
         this.plugins = plugins;
     }
 
@@ -111,6 +120,7 @@ public class Configuration
         private Decorator decorator = new DefaultDecorator();
         private BlockEmitter codeBlockEmitter = null;
         private SpanEmitter specialLinkEmitter = null;
+        private EmojiEmitter emojiEmitter = null;
         private List<Plugin> plugins = new ArrayList<Plugin>();
 
         /**
@@ -240,6 +250,19 @@ public class Configuration
         }
         
         /**
+         * Sets the emoji emitter (:image_description:).
+         * 
+         * @param emitter
+         *            The emitter.
+         * @return This builder.
+         */
+        public Builder setEmojiEmitter(EmojiEmitter emitter)
+        {
+            this.emojiEmitter = emitter;
+            return this;
+        }
+        
+        /**
          * Sets the plugins.
          * 
          * @param plugins
@@ -264,7 +287,7 @@ public class Configuration
         public Configuration build()
         {
             return new Configuration(this.safeMode, this.encoding, this.decorator, this.codeBlockEmitter,
-                    this.forceExtendedProfile, this.convertNewline2Br, this.specialLinkEmitter, this.plugins);
+                    this.forceExtendedProfile, this.convertNewline2Br, this.specialLinkEmitter, this.emojiEmitter, this.plugins);
         }
 
 		public Decorator getDecorator() {

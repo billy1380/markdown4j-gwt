@@ -542,7 +542,7 @@ public class Processor
                     line = line.next;
                 block = root.split(line != null ? line.previous : root.lineTail);
                 block.type = BlockType.FENCED_CODE;
-                block.meta = Utils.getMetaFromFence(block.lines.value);
+                block.meta = MarkdownUtils.getMetaFromFence(block.lines.value);
                 block.lines.setEmpty();
                 if(block.lineTail.getLineType(this.useExtensions) == LineType.FENCED_CODE)
                     block.lineTail.setEmpty();
@@ -562,7 +562,7 @@ public class Processor
                     line = line.next;
                 block = root.split(line != null ? line.previous : root.lineTail);
                 block.type = BlockType.PLUGIN;
-                block.meta = Utils.getMetaFromFence(block.lines.value);
+                block.meta = MarkdownUtils.getMetaFromFence(block.lines.value);
                 block.lines.setEmpty();
                 if(block.lineTail.getLineType(this.useExtensions) == LineType.PLUGIN)
                     block.lineTail.setEmpty();
