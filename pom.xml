@@ -37,6 +37,11 @@
         	<artifactId>emoji-gwt</artifactId>
         	<version>1.0</version>
         </dependency>
+        <dependency>
+        	<groupId>com.google.gwt</groupId>
+        	<artifactId>gwt-dev</artifactId>
+        	<version>2.6.1</version>
+        </dependency>
     </dependencies>
 
     <build>
