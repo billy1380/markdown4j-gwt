@@ -2,7 +2,6 @@ package org.markdown4j;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class TablePlugin extends Plugin {
 
@@ -18,10 +17,10 @@ public class TablePlugin extends Plugin {
 
 	private int findSeparatorLine(int beginIndex, List<String> lines) {
 		for(int i = beginIndex;i<lines.size();i++) {
-			String line = lines.get(i);
-			if(Pattern.matches("- ", line)) {
-				return i;
-			}
+//			String line = lines.get(i);
+//			if(Pattern.matches("- ", line)) {
+//				return i;
+//			}
 		}
 		return -1;
 	}

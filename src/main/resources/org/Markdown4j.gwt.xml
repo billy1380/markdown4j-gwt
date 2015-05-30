@@ -7,5 +7,6 @@
 	<inherits name="com.github.rjeschke.TxtMark" />
 	<source path='markdown4j'>
 	   <exclude name="**/server/**"/>
+	   <exclude name="**/gwt/**"/>
 	</source>
 </module>
