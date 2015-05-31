@@ -29,7 +29,7 @@ public class GwtEmojiEmitter implements EmojiEmitter {
 		String link;
 		String comment;
 		if (safeLink != null && (link = safeLink.asString()).length() != 0) {
-			comment = name + " Emoji";
+			comment = name + " emoji";
 
 			decorator.openImage(out);
 			out.append(" class=\"emoji\" src=\"");
