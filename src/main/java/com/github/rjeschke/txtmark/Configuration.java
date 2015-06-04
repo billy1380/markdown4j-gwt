@@ -250,7 +250,7 @@ public class Configuration
         }
         
         /**
-         * Sets the emoji emitter (:image_description:).
+         * Sets the emoji emitter (:alias:).
          * 
          * @param emitter
          *            The emitter.
