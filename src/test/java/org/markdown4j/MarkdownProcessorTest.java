@@ -7,6 +7,15 @@
 //
 package org.markdown4j;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
+import com.github.rjeschke.txtmark.Decorator;
+import com.github.rjeschke.txtmark.EmojiEmitter;
+
 /**
  * @author billy1380
  *
@@ -16,9 +25,25 @@ public class MarkdownProcessorTest {
 	AbstractMarkdownProcessor test = new AbstractMarkdownProcessor() {
 
 		@Override
-		protected void registerPlugins () {
-			
+		protected void registerPlugins() {
+		}
+
+		@Override
+		protected EmojiEmitter emojiEmitter() {
+			return new EmojiEmitter() {
+
+				@Override
+				public void emitEmoji(StringBuilder out, String name, Decorator decorator) {
+					out.append("£" + name + "£");
+				}
+			};
 		}
 	};
 
+	@Test
+	public void emojiBugTest() throws IOException {
+		String markup = test.process("This is a test test :grin: test");
+
+		assertEquals(markup, "<p>This is a test test £grin£ test</p>\n");
+	}
 }
