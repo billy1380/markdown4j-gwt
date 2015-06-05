@@ -754,7 +754,7 @@ class Emitter {
 					if (c0 != ' ' && !Character.isLetterOrDigit(c1)) return MarkToken.X_RDQUO;
 					break;
 				case ':':
-					return c0 == ':' || c1 == ':' || !Character.isAlphabetic(c1) ? MarkToken.NONE : MarkToken.EMOJI;
+					return c0 != ' ' || c1 != ' ' ? MarkToken.EMOJI : MarkToken.NONE;
 				}
 			}
 			return MarkToken.NONE;

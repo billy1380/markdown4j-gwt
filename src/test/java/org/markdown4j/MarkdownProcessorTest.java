@@ -7,6 +7,8 @@
 //
 package org.markdown4j;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.junit.Test;
@@ -39,9 +41,16 @@ public class MarkdownProcessorTest {
 	};
 
 	@Test
-	public void emojiBugTest() throws IOException {
+	public void emojiTest() throws IOException {
 		String markup = test.process("This is a test test :grin: test");
 
-		//assertEquals(markup, "<p>This is a test test £grin£ test</p>\n");
+		assertEquals("<p>This is a test test £:grin:£ test</p>\n", markup);
+	}
+
+	@Test
+	public void emojiBugTest() throws IOException {
+		String markup = test.process("This is\\: a test test :grin: test");
+
+		assertEquals("<p>This is: a test test £:grin:£ test</p>\n", markup);
 	}
 }
