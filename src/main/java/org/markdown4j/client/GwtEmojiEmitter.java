@@ -31,7 +31,7 @@ public class GwtEmojiEmitter implements EmojiEmitter {
 		if (safeLink != null && (link = safeLink.asString()).length() != 0) {
 			comment = name + " emoji";
 
-			decorator.openImage(out);
+			decorator.openImage(out, link, name);
 			out.append(" class=\"emoji\" src=\"");
 			MarkdownUtils.appendValue(out, link, 0, link.length());
 			out.append("\" alt=\"");

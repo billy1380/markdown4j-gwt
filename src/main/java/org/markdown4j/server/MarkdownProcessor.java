@@ -35,7 +35,7 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 				String link = "http://www.emoji.org/" + name;
 				String comment = name + " emoji";
 
-				decorator.openImage(out);
+				decorator.openImage(out, link, name);
 				out.append(" class=\"emoji\" src=\"");
 				MarkdownUtils.appendValue(out, link, 0, link.length());
 				out.append("\" alt=\"");

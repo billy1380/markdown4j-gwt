@@ -77,13 +77,13 @@ class Emitter {
 
 		switch (root.type) {
 		case RULER:
-			this.config.decorator.horizontalRuler(out);
+			this.config.decorator.horizontalRuler(out, root);
 			return;
 		case NONE:
 		case XML:
 			break;
 		case HEADLINE:
-			this.config.decorator.openHeadline(out, root.hlDepth);
+			this.config.decorator.openHeadline(out, root);
 			if (this.useExtensions && root.id != null) {
 				out.append(" id=\"");
 				MarkdownUtils.appendCode(out, root.id, 0, root.id.length());
@@ -92,23 +92,23 @@ class Emitter {
 			out.append('>');
 			break;
 		case PARAGRAPH:
-			this.config.decorator.openParagraph(out);
+			this.config.decorator.openParagraph(out, root);
 			break;
 		case CODE:
 		case FENCED_CODE:
-			if (this.config.codeBlockEmitter == null) this.config.decorator.openCodeBlock(out);
+			if (this.config.codeBlockEmitter == null) this.config.decorator.openCodeBlock(out, root);
 			break;
 		case BLOCKQUOTE:
-			this.config.decorator.openBlockquote(out);
+			this.config.decorator.openBlockquote(out, root);
 			break;
 		case UNORDERED_LIST:
-			this.config.decorator.openUnorderedList(out);
+			this.config.decorator.openUnorderedList(out, root);
 			break;
 		case ORDERED_LIST:
-			this.config.decorator.openOrderedList(out);
+			this.config.decorator.openOrderedList(out, root);
 			break;
 		case LIST_ITEM:
-			this.config.decorator.openListItem(out);
+			this.config.decorator.openListItem(out, root);
 			if (this.useExtensions && root.id != null) {
 				out.append(" id=\"");
 				MarkdownUtils.appendCode(out, root.id, 0, root.id.length());
@@ -136,26 +136,26 @@ class Emitter {
 		case XML:
 			break;
 		case HEADLINE:
-			this.config.decorator.closeHeadline(out, root.hlDepth);
+			this.config.decorator.closeHeadline(out, root);
 			break;
 		case PARAGRAPH:
-			this.config.decorator.closeParagraph(out);
+			this.config.decorator.closeParagraph(out, root);
 			break;
 		case CODE:
 		case FENCED_CODE:
-			if (this.config.codeBlockEmitter == null) this.config.decorator.closeCodeBlock(out);
+			if (this.config.codeBlockEmitter == null) this.config.decorator.closeCodeBlock(out, root);
 			break;
 		case BLOCKQUOTE:
-			this.config.decorator.closeBlockquote(out);
+			this.config.decorator.closeBlockquote(out, root);
 			break;
 		case UNORDERED_LIST:
-			this.config.decorator.closeUnorderedList(out);
+			this.config.decorator.closeUnorderedList(out, root);
 			break;
 		case ORDERED_LIST:
-			this.config.decorator.closeOrderedList(out);
+			this.config.decorator.closeOrderedList(out, root);
 			break;
 		case LIST_ITEM:
-			this.config.decorator.closeListItem(out);
+			this.config.decorator.closeListItem(out, root);
 			break;
 		default:
 			break;
@@ -307,7 +307,7 @@ class Emitter {
 				this.recursiveEmitLine(out, name, 0, MarkToken.NONE);
 				out.append("</abbr>");
 			} else {
-				this.config.decorator.openLink(out);
+				this.config.decorator.openLink(out, link, comment);
 				out.append(" href=\"");
 				MarkdownUtils.appendValue(out, link, 0, link.length());
 				out.append('"');
@@ -321,7 +321,7 @@ class Emitter {
 				out.append("</a>");
 			}
 		} else {
-			this.config.decorator.openImage(out);
+			this.config.decorator.openImage(out, link, comment);
 			out.append(" src=\"");
 			MarkdownUtils.appendValue(out, link, 0, link.length());
 			out.append("\" alt=\"");
@@ -360,7 +360,7 @@ class Emitter {
 			pos = MarkdownUtils.readUntil(temp, in, pos, '>');
 			if (pos != -1) {
 				final String link = temp.toString();
-				this.config.decorator.openLink(out);
+				this.config.decorator.openLink(out, link, null);
 				out.append(" href=\"");
 				MarkdownUtils.appendValue(out, link, 0, link.length());
 				out.append("\">");
@@ -377,7 +377,7 @@ class Emitter {
 			pos = MarkdownUtils.readUntil(temp, in, pos, '>');
 			if (pos != -1) {
 				final String link = temp.toString();
-				this.config.decorator.openLink(out);
+				this.config.decorator.openLink(out, link, null);
 				out.append(" href=\"");
 
 				// address auto links
@@ -465,6 +465,7 @@ class Emitter {
 	private int recursiveEmitLine(final StringBuilder out, final String in, int start, MarkToken token) {
 		int pos = start, a, b;
 		final StringBuilder temp = new StringBuilder();
+		String value;
 		while (pos < in.length()) {
 			final MarkToken mt = this.getToken(in, pos);
 			if (token != MarkToken.NONE
@@ -488,9 +489,9 @@ class Emitter {
 				temp.setLength(0);
 				b = this.recursiveEmitLine(temp, in, pos + 1, mt);
 				if (b > 0) {
-					this.config.decorator.openEmphasis(out);
-					out.append(temp);
-					this.config.decorator.closeEmphasis(out);
+					this.config.decorator.openEmphasis(out, value = temp.toString());
+					out.append(value);
+					this.config.decorator.closeEmphasis(out, value);
 					pos = b;
 				} else {
 					out.append(in.charAt(pos));
@@ -501,9 +502,9 @@ class Emitter {
 				temp.setLength(0);
 				b = this.recursiveEmitLine(temp, in, pos + 2, mt);
 				if (b > 0) {
-					this.config.decorator.openStrong(out);
-					out.append(temp);
-					this.config.decorator.closeStrong(out);
+					this.config.decorator.openStrong(out, value = temp.toString());
+					out.append(value);
+					this.config.decorator.closeStrong(out, value);
 					pos = b + 1;
 				} else {
 					out.append(in.charAt(pos));
@@ -513,9 +514,9 @@ class Emitter {
 				temp.setLength(0);
 				b = this.recursiveEmitLine(temp, in, pos + 2, mt);
 				if (b > 0) {
-					this.config.decorator.openStrike(out);
-					out.append(temp);
-					this.config.decorator.closeStrike(out);
+					this.config.decorator.openStrike(out, value = temp.toString());
+					out.append(value);
+					this.config.decorator.closeStrike(out, value);
 					pos = b + 1;
 				} else {
 					out.append(in.charAt(pos));
@@ -525,9 +526,9 @@ class Emitter {
 				temp.setLength(0);
 				b = this.recursiveEmitLine(temp, in, pos + 1, mt);
 				if (b > 0) {
-					this.config.decorator.openSuper(out);
-					out.append(temp);
-					this.config.decorator.closeSuper(out);
+					this.config.decorator.openSuper(out, value = temp.toString());
+					out.append(value);
+					this.config.decorator.closeSuper(out, value);
 					pos = b;
 				} else {
 					out.append(in.charAt(pos));

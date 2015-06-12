@@ -35,8 +35,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void openParagraph(final StringBuilder out);
+    public void openParagraph(final StringBuilder out, Block block);
 
     /**
      * Called when a paragraph is closed.
@@ -51,8 +52,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void closeParagraph(final StringBuilder out);
+    public void closeParagraph(final StringBuilder out, Block block);
 
     /**
      * Called when a blockquote is opened.
@@ -65,8 +67,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void openBlockquote(final StringBuilder out);
+    public void openBlockquote(final StringBuilder out, Block block);
 
     /**
      * Called when a blockquote is closed.
@@ -81,8 +84,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void closeBlockquote(final StringBuilder out);
+    public void closeBlockquote(final StringBuilder out, Block block);
 
     /**
      * Called when a code block is opened.
@@ -97,8 +101,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void openCodeBlock(final StringBuilder out);
+    public void openCodeBlock(final StringBuilder out, Block block);
 
     /**
      * Called when a code block is closed.
@@ -113,8 +118,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void closeCodeBlock(final StringBuilder out);
+    public void closeCodeBlock(final StringBuilder out, Block block);
 
     /**
      * Called when a code span is opened.
@@ -166,7 +172,7 @@ public interface Decorator
      * @param out
      *            The StringBuilder to write to.
      */
-    public void openHeadline(final StringBuilder out, int level);
+    public void openHeadline(final StringBuilder out, Block block);
 
     /**
      * Called when a headline is closed.
@@ -184,7 +190,7 @@ public interface Decorator
      * @param out
      *            The StringBuilder to write to.
      */
-    public void closeHeadline(final StringBuilder out, int level);
+    public void closeHeadline(final StringBuilder out, Block block);
 
     /**
      * Called when a strong span is opened.
@@ -199,8 +205,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void openStrong(final StringBuilder out);
+    public void openStrong(final StringBuilder out, String value);
 
     /**
      * Called when a strong span is closed.
@@ -215,8 +222,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void closeStrong(final StringBuilder out);
+    public void closeStrong(final StringBuilder out, String value);
     
     /**
      * Called when a strike span is opened.
@@ -231,8 +239,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void openStrike(final StringBuilder out);
+    public void openStrike(final StringBuilder out, String value);
 
     /**
      * Called when a strike span is closed.
@@ -247,8 +256,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void closeStrike(final StringBuilder out);
+    public void closeStrike(final StringBuilder out, String value);
     
 
     /**
@@ -264,8 +274,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void openEmphasis(final StringBuilder out);
+    public void openEmphasis(final StringBuilder out, String value);
 
     /**
      * Called when an emphasis span is closed.
@@ -280,8 +291,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value
      */
-    public void closeEmphasis(final StringBuilder out);
+    public void closeEmphasis(final StringBuilder out, String value);
 
     /**
      * Called when a superscript span is opened.
@@ -296,8 +308,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void openSuper(final StringBuilder out);
+    public void openSuper(final StringBuilder out, String value);
 
     /**
      * Called when a superscript span is closed.
@@ -312,8 +325,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param value 
      */
-    public void closeSuper(final StringBuilder out);
+    public void closeSuper(final StringBuilder out, String value);
 
     /**
      * Called when an ordered list is opened.
@@ -328,8 +342,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void openOrderedList(final StringBuilder out);
+    public void openOrderedList(final StringBuilder out, Block block);
 
     /**
      * Called when an ordered list is closed.
@@ -344,8 +359,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void closeOrderedList(final StringBuilder out);
+    public void closeOrderedList(final StringBuilder out, Block block);
 
     /**
      * Called when an unordered list is opened.
@@ -360,8 +376,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void openUnorderedList(final StringBuilder out);
+    public void openUnorderedList(final StringBuilder out, Block block);
 
     /**
      * Called when an unordered list is closed.
@@ -376,8 +393,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void closeUnorderedList(final StringBuilder out);
+    public void closeUnorderedList(final StringBuilder out, Block block);
 
     /**
      * Called when a list item is opened.
@@ -395,8 +413,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void openListItem(final StringBuilder out);
+    public void openListItem(final StringBuilder out, Block block);
 
     /**
      * Called when a list item is closed.
@@ -411,8 +430,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void closeListItem(final StringBuilder out);
+    public void closeListItem(final StringBuilder out, Block block);
 
     /**
      * Called when a horizontal ruler is encountered.
@@ -427,8 +447,9 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param block 
      */
-    public void horizontalRuler(final StringBuilder out);
+    public void horizontalRuler(final StringBuilder out, Block block);
 
     /**
      * Called when a link is opened.
@@ -446,8 +467,10 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param title 
+     * @param link 
      */
-    public void openLink(final StringBuilder out);
+    public void openLink(final StringBuilder out, String link, String title);
 
     /**
      * Called when an image is opened.
@@ -465,6 +488,8 @@ public interface Decorator
      * 
      * @param out
      *            The StringBuilder to write to.
+     * @param title 
+     * @param link 
      */
-    public void openImage(final StringBuilder out);
+    public void openImage(final StringBuilder out, String link, String title);
 }
