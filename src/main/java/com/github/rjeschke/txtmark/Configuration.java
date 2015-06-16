@@ -272,7 +272,9 @@ public class Configuration
         public Builder registerPlugins(Plugin... plugins)
         {
         	for(Plugin plugin : plugins) {
-                this.plugins.add(plugin);        		
+        		if (plugin != null) {
+        			this.plugins.add(plugin);
+        		}
         	}
             return this;
         }

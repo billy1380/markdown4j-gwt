@@ -49,7 +49,7 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 	}
 
 	public HandlerRegistration addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
-		return manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
+		return ensureManager().addHandler(PluginContentReadyEventHandler.TYPE, handler);
 	}
 
 	/*
@@ -59,11 +59,15 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 	 */
 	@Override
 	protected void registerPlugins() {
+		registerPlugins(new WebSequencePlugin(ensureManager()), new IncludePlugin(ensureManager()));
+	}
+
+	protected HandlerManager ensureManager() {
 		if (manager == null) {
 			manager = new HandlerManager(this);
 		}
 
-		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
+		return manager;
 	}
 
 	/*
