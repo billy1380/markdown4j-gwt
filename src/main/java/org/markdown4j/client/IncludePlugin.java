@@ -34,7 +34,9 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 			out.append(id = HTMLPanel.createUniqueId());
 			out.append("\">Loading...</div>");
 
-			getContent(src, id);
+			if (src != null && src.length() > 0) {
+				getContent(src, id);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("Error while rendering " + this.getClass().getName(), e);
 		}
@@ -60,7 +62,8 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 								/*
 								 * (non-Javadoc)
 								 * 
-								 * @see org.markdown4j.client.MarkdownProcessor#registerPlugins()
+								 * @see org.markdown4j.client.MarkdownProcessor#
+								 * registerPlugins()
 								 */
 								protected void registerPlugins() {
 									// don't register any especially not the include plugin to avoid recursive content and also because there are no listeners
@@ -73,7 +76,8 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 				}
 
 				@Override
-				public void onError(Request request, Throwable exception) {}
+				public void onError(Request request, Throwable exception) {
+				}
 			});
 		} catch (RequestException rex) {
 			throw new IOException(rex);
