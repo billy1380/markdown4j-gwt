@@ -3,7 +3,7 @@
 //  markdown4j-gwt
 //
 //  Created by William Shakour (billy1380) on 11 Jan 2015.
-//  Copyright © 2015 SPACEHOPPER STUDIOS Ltd. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package org.markdown4j.client;
 
@@ -49,7 +49,7 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 	}
 
 	public HandlerRegistration addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
-		return manager.addHandler(PluginContentReadyEventHandler.TYPE, handler);
+		return ensureManager().addHandler(PluginContentReadyEventHandler.TYPE, handler);
 	}
 
 	/*
@@ -59,11 +59,15 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 	 */
 	@Override
 	protected void registerPlugins() {
+		registerPlugins(new WebSequencePlugin(ensureManager()), new IncludePlugin(ensureManager()));
+	}
+
+	protected HandlerManager ensureManager() {
 		if (manager == null) {
 			manager = new HandlerManager(this);
 		}
 
-		registerPlugins(new WebSequencePlugin(manager), new IncludePlugin(manager));
+		return manager;
 	}
 
 	/*

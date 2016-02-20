@@ -21,6 +21,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  */
 public class IncludePlugin extends AbstractAsyncPlugin {
 
+	private MarkdownProcessor processor = null;
+	private Request request;
+
 	public IncludePlugin(HandlerManager manager) {
 		super("include", manager);
 	}
@@ -34,49 +37,69 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 			out.append(id = HTMLPanel.createUniqueId());
 			out.append("\">Loading...</div>");
 
-			getContent(src, id);
+			if (src != null && src.length() > 0) {
+				getContent(src, id, lines, params);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("Error while rendering " + this.getClass().getName(), e);
 		}
 	}
 
-	private void getContent(String src, final String id) throws IOException {
+	protected void getContent(final String src, final String id, final List<String> lines, final Map<String, String> params) throws IOException {
+		if (request != null && request.isPending()) {
+			request.cancel();
+		}
+
 		String corsProxy = src.replace("http://", "").replace("https://", "");
 
 		// Send the request
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode("http://spchoprcors.appspot.com/" + corsProxy));
 		try {
-			builder.sendRequest("", new RequestCallback() {
+			request = builder.sendRequest("", new RequestCallback() {
 
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
 						String content = response.getText();
-						String markdownContent = null;
-
-						if (manager != null) {
-							markdownContent = (new MarkdownProcessor() {
-
-								/*
-								 * (non-Javadoc)
-								 * 
-								 * @see org.markdown4j.client.MarkdownProcessor#registerPlugins()
-								 */
-								protected void registerPlugins() {
-									// don't register any especially not the include plugin to avoid recursive content and also because there are no listeners
-								};
-
-							}).process(content);
-							manager.fireEvent(new PluginContentReadyEvent(id, markdownContent == null ? content : markdownContent));
-						}
+						gotContent(content, processContent(content), src, id, lines, params);
 					}
 				}
 
 				@Override
-				public void onError(Request request, Throwable exception) {}
+				public void onError(Request request, Throwable exception) {
+				}
 			});
 		} catch (RequestException rex) {
 			throw new IOException(rex);
 		}
+	}
+
+	protected void gotContent(String content, String processed, String src, String id, List<String> lines, Map<String, String> params) {
+		if (manager != null) {
+			manager.fireEvent(new PluginContentReadyEvent(IncludePlugin.this, lines, params, id, processed == null ? content : processed));
+		}
+	}
+
+	private String processContent(String content) {
+		return ensureProcessor().process(content);
+	}
+
+	private MarkdownProcessor ensureProcessor() {
+		return (processor == null ? (processor = new MarkdownProcessor() {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.markdown4j.client.MarkdownProcessor# registerPlugins()
+			 */
+			protected void registerPlugins() {
+				// don't register any especially not the include plugin to avoid recursive content and also because there are no listeners
+			};
+
+		}) : processor);
+	}
+
+	public void setProcessor(MarkdownProcessor processor) {
+		this.processor = processor;
 	}
 }

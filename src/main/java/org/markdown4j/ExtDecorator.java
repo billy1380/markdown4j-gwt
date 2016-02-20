@@ -3,6 +3,7 @@ package org.markdown4j;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.github.rjeschke.txtmark.Block;
 import com.github.rjeschke.txtmark.DefaultDecorator;
 
 public class ExtDecorator extends DefaultDecorator {
@@ -61,21 +62,21 @@ public class ExtDecorator extends DefaultDecorator {
 	}
 
 	@Override
-	public void openParagraph(StringBuilder out) {
+	public void openParagraph(StringBuilder out, Block block) {
 		if(!open(out, "p"))
-		super.openParagraph(out);
+		super.openParagraph(out, block);
 	}
 
 	@Override
-	public void openBlockquote(StringBuilder out) {
+	public void openBlockquote(StringBuilder out, Block block) {
 		if(!open(out, "blockquote"))
-		super.openBlockquote(out);
+		super.openBlockquote(out, block);
 	}
 
 	@Override
-	public void openCodeBlock(StringBuilder out) {
+	public void openCodeBlock(StringBuilder out, Block block) {
 		if(!open(out, "pre"))
-		super.openCodeBlock(out);
+		super.openCodeBlock(out, block);
 	}
 
 	@Override
@@ -85,73 +86,73 @@ public class ExtDecorator extends DefaultDecorator {
 	}
 
 	@Override
-	public void openHeadline(StringBuilder out, int level) {
-		if(!open(out, "h"+level, false))
-		super.openHeadline(out, level);
+	public void openHeadline(StringBuilder out, Block block) {
+		if(!open(out, "h"+block.hlDepth, false))
+		super.openHeadline(out, block);
 	}
 
 	@Override
-	public void openStrong(StringBuilder out) {
+	public void openStrong(StringBuilder out, String value) {
 		if(!open(out, "strong"))
-		super.openStrong(out);
+		super.openStrong(out, value);
 	}
 
 	@Override
-	public void openStrike(StringBuilder out) {
+	public void openStrike(StringBuilder out, String value) {
 		if(!open(out, "s"))
-		super.openStrike(out);
+		super.openStrike(out, value);
 	}
 
 	@Override
-	public void openEmphasis(StringBuilder out) {
+	public void openEmphasis(StringBuilder out, String value) {
 		if(!open(out, "em"))
-		super.openEmphasis(out);
+		super.openEmphasis(out, value);
 	}
 
 	@Override
-	public void openSuper(StringBuilder out) {
+	public void openSuper(StringBuilder out, String value) {
 		if(!open(out, "super"))
-		super.openSuper(out);
+		super.openSuper(out, value);
 	}
 
 	@Override
-	public void openOrderedList(StringBuilder out) {
+	public void openOrderedList(StringBuilder out, Block block) {
 		if(!open(out, "ol"))
-		super.openOrderedList(out);
+		super.openOrderedList(out, block);
 	}
 
 	@Override
-	public void openUnorderedList(StringBuilder out) {
+	public void openUnorderedList(StringBuilder out, Block block) {
 		if(!open(out, "ul"))
-		super.openUnorderedList(out);
+		super.openUnorderedList(out, block);
 	}
 
 	@Override
-	public void openListItem(StringBuilder out) {
+	public void openListItem(StringBuilder out, Block block) {
 		if(!open(out, "li", false))
-		super.openListItem(out);
+		super.openListItem(out, block);
 	}
 
 	@Override
-	public void horizontalRuler(StringBuilder out) {
+	public void horizontalRuler(StringBuilder out, Block block) {
 		if(open(out, "hr", false)) {
 			out.append("/>");
 		}
 		else {
-			super.horizontalRuler(out);
+			super.horizontalRuler(out, block);
 		}
 	}
 
 	@Override
-	public void openLink(StringBuilder out) {
+	public void openLink(StringBuilder out, String link, String title) {
 		if(!open(out, "a", false))
-		super.openLink(out);
+		super.openLink(out, link, title);
 	}
 
 	@Override
-	public void openImage(StringBuilder out) {
+	public void openImage(StringBuilder out, String link, String title) {
 		if(!open(out, "img", false))
-		super.openImage(out);
+		super.openImage(out, link, title);
 	}
 	
 	

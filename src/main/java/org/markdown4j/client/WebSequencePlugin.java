@@ -48,13 +48,13 @@ public class WebSequencePlugin extends AbstractAsyncPlugin {
 			out.append(id = HTMLPanel.createUniqueId());
 			out.append("\">Loading...</div>");
 
-			getSequenceDiagram(content, style, id);
+			getSequenceDiagram(content, style, id, lines, params);
 		} catch (IOException e) {
 			throw new RuntimeException("Error while rendering websequenceplugin", e);
 		}
 	}
 
-	private void getSequenceDiagram(String text, String style, final String id) throws IOException {
+	private void getSequenceDiagram(String text, String style, final String id, final List<String> lines, final Map<String, String> params) throws IOException {
 		// Build parameter string
 		String data = "style=" + style + "&message=" + URL.encode(text) + "&apiVersion=1";
 
@@ -75,14 +75,15 @@ public class WebSequencePlugin extends AbstractAsyncPlugin {
 							String content = "<img src=\"http://www.websequencediagrams.com/" + json.substring(start, end) + "\">";
 
 							if (manager != null) {
-								manager.fireEvent(new PluginContentReadyEvent(id, content));
+								manager.fireEvent(new PluginContentReadyEvent(WebSequencePlugin.this, lines, params, id, content));
 							}
 						}
 					}
 				}
 
 				@Override
-				public void onError(Request request, Throwable exception) {}
+				public void onError(Request request, Throwable exception) {
+				}
 			});
 		} catch (RequestException rex) {
 			throw new IOException(rex);
