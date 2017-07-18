@@ -12,6 +12,7 @@ import java.io.Reader;
 
 import org.markdown4j.AbstractMarkdownProcessor;
 import org.markdown4j.client.event.PluginContentReadyEventHandler;
+import org.markdown4j.client.shared.DefaultEmojiEmitter;
 
 import com.github.rjeschke.txtmark.EmojiEmitter;
 import com.google.gwt.event.shared.HandlerManager;
@@ -24,7 +25,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class MarkdownProcessor extends AbstractMarkdownProcessor {
 	private HandlerManager manager;
 
-	public String process(String markdown) {
+	public String process (String markdown) {
 		String processed = null;
 		try {
 			processed = super.process(markdown);
@@ -36,7 +37,7 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 		return processed;
 	}
 
-	public String process(Reader reader) {
+	public String process (Reader reader) {
 		String processed = null;
 		try {
 			processed = super.process(reader);
@@ -48,21 +49,22 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 		return processed;
 	}
 
-	public HandlerRegistration addPluginContentReadyHandler(PluginContentReadyEventHandler handler) {
-		return ensureManager().addHandler(PluginContentReadyEventHandler.TYPE, handler);
+	public HandlerRegistration addPluginContentReadyHandler (
+			PluginContentReadyEventHandler handler) {
+		return ensureManager().addHandler(PluginContentReadyEventHandler.TYPE,
+				handler);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see org.markdown4j.AbstractMarkdownProcessor#registerPlugins()
-	 */
+	 * @see org.markdown4j.AbstractMarkdownProcessor#registerPlugins() */
 	@Override
-	protected void registerPlugins() {
-		registerPlugins(new WebSequencePlugin(ensureManager()), new IncludePlugin(ensureManager()));
+	protected void registerPlugins () {
+		registerPlugins(new WebSequencePlugin(ensureManager()),
+				new IncludePlugin(ensureManager()));
 	}
 
-	protected HandlerManager ensureManager() {
+	protected HandlerManager ensureManager () {
 		if (manager == null) {
 			manager = new HandlerManager(this);
 		}
@@ -70,13 +72,11 @@ public class MarkdownProcessor extends AbstractMarkdownProcessor {
 		return manager;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see org.markdown4j.AbstractMarkdownProcessor#emojiEmitter()
-	 */
+	 * @see org.markdown4j.AbstractMarkdownProcessor#emojiEmitter() */
 	@Override
-	protected EmojiEmitter emojiEmitter() {
-		return new GwtEmojiEmitter();
+	protected EmojiEmitter emojiEmitter () {
+		return new DefaultEmojiEmitter();
 	}
 }
