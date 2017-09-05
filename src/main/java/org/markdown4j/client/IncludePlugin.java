@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -24,12 +25,13 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 	private MarkdownProcessor processor = null;
 	private Request request;
 
-	public IncludePlugin(HandlerManager manager) {
+	public IncludePlugin (HandlerManager manager) {
 		super("include", manager);
 	}
 
 	@Override
-	public void emit(final StringBuilder out, final List<String> lines, final Map<String, String> params) {
+	public void emit (final StringBuilder out, final List<String> lines,
+			final Map<String, String> params) {
 		String src = params.get("src");
 		try {
 			String id = null;
@@ -41,11 +43,14 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 				getContent(src, id, lines, params);
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Error while rendering " + this.getClass().getName(), e);
+			throw new RuntimeException(
+					"Error while rendering " + this.getClass().getName(), e);
 		}
 	}
 
-	protected void getContent(final String src, final String id, final List<String> lines, final Map<String, String> params) throws IOException {
+	protected void getContent (final String src, final String id,
+			final List<String> lines, final Map<String, String> params)
+			throws IOException {
 		if (request != null && request.isPending()) {
 			request.cancel();
 		}
@@ -53,20 +58,25 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 		String corsProxy = src.replace("http://", "").replace("https://", "");
 
 		// Send the request
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode("http://spchoprcors.appspot.com/" + corsProxy));
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST,
+				URL.encode("http://spchoprcors.appspot.com/" + corsProxy));
 		try {
 			request = builder.sendRequest("", new RequestCallback() {
 
 				@Override
-				public void onResponseReceived(Request request, Response response) {
-					if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+				public void onResponseReceived (Request request,
+						Response response) {
+					if (response.getStatusCode() >= 200
+							&& response.getStatusCode() < 300) {
 						String content = response.getText();
-						gotContent(content, processContent(content), src, id, lines, params);
+						gotContent(content, processContent(content), src, id,
+								lines, params);
 					}
 				}
 
 				@Override
-				public void onError(Request request, Throwable exception) {
+				public void onError (Request request, Throwable exception) {
+					GWT.log("Error getting [" + src + "]", exception);
 				}
 			});
 		} catch (RequestException rex) {
@@ -74,32 +84,34 @@ public class IncludePlugin extends AbstractAsyncPlugin {
 		}
 	}
 
-	protected void gotContent(String content, String processed, String src, String id, List<String> lines, Map<String, String> params) {
+	protected void gotContent (String content, String processed, String src,
+			String id, List<String> lines, Map<String, String> params) {
 		if (manager != null) {
-			manager.fireEvent(new PluginContentReadyEvent(IncludePlugin.this, lines, params, id, processed == null ? content : processed));
+			manager.fireEvent(new PluginContentReadyEvent(IncludePlugin.this,
+					lines, params, id,
+					processed == null ? content : processed));
 		}
 	}
 
-	private String processContent(String content) {
+	private String processContent (String content) {
 		return ensureProcessor().process(content);
 	}
 
-	private MarkdownProcessor ensureProcessor() {
+	private MarkdownProcessor ensureProcessor () {
 		return (processor == null ? (processor = new MarkdownProcessor() {
 
-			/*
-			 * (non-Javadoc)
+			/* (non-Javadoc)
 			 * 
-			 * @see org.markdown4j.client.MarkdownProcessor# registerPlugins()
-			 */
-			protected void registerPlugins() {
+			 * @see org.markdown4j.client.MarkdownProcessor#
+			 * registerPlugins() */
+			protected void registerPlugins () {
 				// don't register any especially not the include plugin to avoid recursive content and also because there are no listeners
 			};
 
 		}) : processor);
 	}
 
-	public void setProcessor(MarkdownProcessor processor) {
+	public void setProcessor (MarkdownProcessor processor) {
 		this.processor = processor;
 	}
 }
